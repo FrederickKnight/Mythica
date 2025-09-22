@@ -1,5 +1,5 @@
 [project]
-name = "ecosystem"
+name = "mythica"
 version = "0.1.0"
 description = "lib for simulation of fantasy worlds"
 readme = "README.md"

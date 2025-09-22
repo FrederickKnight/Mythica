@@ -5,6 +5,10 @@ on:
     branches:
       - main
       - test
+    paths-ignore:
+      - CHANGELOG.md
+      - examples/*
+      - LICENSE
 
 jobs:
   test:

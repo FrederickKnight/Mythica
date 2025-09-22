@@ -1,0 +1,17 @@
+version: "3.12"
+services:
+  prod:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: ecosystem-prod
+
+  dev:
+    build:
+      context: .
+      dockerfile: dockerfile.dev
+    container_name: ecosystem-dev
+    volumes:
+      - .:/workspace
+    tty: true
+    stdin_open: true

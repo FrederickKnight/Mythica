@@ -1,10 +1,10 @@
 from pydantic import BaseModel,field_serializer
 
-from ecosystem.schema import AbilityCategoryEnum
+from mythica.schema import AbilityCategoryEnum
 from typing import Literal, Union, Self, Callable, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ecosystem.core.context import ContextAbility
+    from mythica.core.context import ContextAbility
 
 AbilityCategories = Union[AbilityCategoryEnum,Literal["attack","defense"]]
 

@@ -1,7 +1,7 @@
 import pytest
-from ecosystem.core import BaseCreature,BaseAbility
-from ecosystem.core.context import ContextAbility
-from ecosystem.catalog import (
+from mythica.core import BaseCreature,BaseAbility
+from mythica.core.context import ContextAbility
+from mythica.catalog import (
     effect_fire_ball,
     effect_tackle
 )

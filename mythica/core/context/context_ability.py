@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from ecosystem.core import BaseCreature
+from mythica.core import BaseCreature
 
 class ContextAbility(BaseModel):
     """

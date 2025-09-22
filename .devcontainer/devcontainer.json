@@ -26,7 +26,8 @@
         "netcorext.uuid-generator",
         "vscode-icons-team.vscode-icons",
         "redhat.vscode-yaml",
-        "ms-vscode.makefile-tools"
+        "ms-vscode.makefile-tools",
+        "github.vscode-github-actions"
       ]
     }
   }

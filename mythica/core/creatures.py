@@ -2,7 +2,7 @@ from pydantic import BaseModel,Field, field_validator
 from .ability import BaseAbility
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ecosystem.core.context import ContextAbility
+    from mythica.core.context import ContextAbility
 
 class BaseCreature(BaseModel):
     name:str

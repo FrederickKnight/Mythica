@@ -1,10 +1,10 @@
-from ecosystem.core import BaseAbility, BaseCreature, BaseEcosystem
-from ecosystem.schema import AbilityCategoryEnum
-from ecosystem.utils import EcosystemIO
+from mythica.core import BaseAbility, BaseCreature, BaseEcosystem
+from mythica.schema import AbilityCategoryEnum
+from mythica.utils import EcosystemIO
 
 if __name__ == "__main__":
-    from ecosystem.core.context import ContextAbility
-    from ecosystem.catalog import (
+    from mythica.core.context import ContextAbility
+    from mythica.catalog import (
         effect_extreme_speed,
         effect_fire_ball,
         effect_tackle,

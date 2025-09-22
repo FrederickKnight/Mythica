@@ -1,5 +1,5 @@
 import pytest
-from ecosystem.core import BaseCreature
+from mythica.core import BaseCreature
 
 json_creature = {
     "name" : "Dinosaurio",

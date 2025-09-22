@@ -1,9 +1,9 @@
 from pydantic import BaseModel,Field,PrivateAttr,field_validator, model_validator
 from typing import Self
 import random
-from ecosystem.core import BaseCreature, BaseAbility
-from ecosystem.core.context import ContextAbility
-from ecosystem.utils import EcosystemIO
+from mythica.core import BaseCreature, BaseAbility
+from mythica.core.context import ContextAbility
+from mythica.utils import EcosystemIO
 
 class BaseEcosystem(BaseModel):
     name:str

@@ -1,7 +1,7 @@
 import pytest
-from ecosystem.core import BaseAbility, BaseCreature
-from ecosystem.core.context import ContextAbility
-from ecosystem.schema import AbilityCategoryEnum
+from mythica.core import BaseAbility, BaseCreature
+from mythica.core.context import ContextAbility
+from mythica.schema import AbilityCategoryEnum
 
 damage_fire_ball = 20
 

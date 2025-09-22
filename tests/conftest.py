@@ -7,12 +7,12 @@ def rebuild_models():
     Rebuild models to ensure all references are correct.
     """
 
-    from ecosystem.core import (
+    from mythica.core import (
         BaseAbility,
         BaseCreature,
         BaseEcosystem
     )
-    from ecosystem.core.context import ContextAbility
+    from mythica.core.context import ContextAbility
 
 
     ContextAbility.model_rebuild()

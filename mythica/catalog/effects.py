@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ecosystem.core.context import ContextAbility
+    from mythica.core.context import ContextAbility
 
 def effect_fire_ball(ctx:"ContextAbility") -> str:
     damage = 20

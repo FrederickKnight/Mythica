@@ -1,6 +1,6 @@
 import pytest
-from ecosystem.core.context import ContextAbility
-from ecosystem.core import BaseCreature, BaseEcosystem, BaseAbility
+from mythica.core.context import ContextAbility
+from mythica.core import BaseCreature, BaseEcosystem, BaseAbility
 
 creature_1 = BaseCreature(
     name = "Dinosaurio",

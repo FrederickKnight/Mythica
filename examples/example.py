@@ -1,6 +1,7 @@
 from mythica.core import BaseAbility, BaseCreature, BaseEcosystem
 from mythica.schema import AbilityCategoryEnum
 from mythica.utils import EcosystemIO
+import time
 
 if __name__ == "__main__":
     from mythica.core.context import ContextAbility
@@ -9,7 +10,6 @@ if __name__ == "__main__":
         effect_fire_ball,
         effect_tackle,
         effect_tsunami,
-        effect_testicular_torsion
     )
 
     ### ABILITIES ##
@@ -18,13 +18,6 @@ if __name__ == "__main__":
         category=AbilityCategoryEnum.ATTACK,
         cost=20,
         effect=effect_fire_ball
-    )
-
-    testicular_torsion = BaseAbility(
-        name="testicular torcion",
-        category=AbilityCategoryEnum.ATTACK,
-        cost=10,
-        effect=effect_testicular_torsion
     )
 
     extreme_speed = BaseAbility(
@@ -51,16 +44,16 @@ if __name__ == "__main__":
     ### CREATURES ###
     creature_1 = BaseCreature(
         name = "Dinosaurio",
-        health = 500,
+        health = 60,
         velocity = 10,
         energy = 100
     )
 
-    creature_1.add_abilities([fire_ball,tackle,testicular_torsion])
+    creature_1.add_abilities([fire_ball,tackle])
 
     creature_2 = BaseCreature(
         name = "Pajaro",
-        health = 200,
+        health = 20,
         velocity = 50,
         energy = 100
     )
@@ -68,7 +61,7 @@ if __name__ == "__main__":
 
     creature_3 = BaseCreature(
         name = "Alien",
-        health = 800,
+        health = 50,
         velocity = 15,
         energy = 100
     )
@@ -85,14 +78,20 @@ if __name__ == "__main__":
         creatures = [
             creature_1,
             creature_2,
+            creature_3,
+            creature_1,
+            creature_2,
             creature_3
         ],
         logger = logger
     )
 
-    for turn in range(5):
-        logger.log(f"-------Turn {turn + 1}------------")
-        ecosystem.simulate_simple_battle_turn()
+    start = time.perf_counter()
+
+    ecosystem.simulate_simple_battle(50000)
+
+    end = time.perf_counter()
+    print(f"Tiempo de ejecución: {end - start:.6f} segundos")
 
     for message in logger.get_log():
         print(message)

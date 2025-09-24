@@ -143,3 +143,40 @@ def test_creature_use_ability():
     new_energy = creature_1.energy
     creature_1.use_ability(tackle,ability_context)
     assert creature_1.energy == new_energy, f"Ability that isn't the creature, should not be used, energy decreased"
+
+def test_creature_act():
+    fire_ball = BaseAbility(
+        name="fire ball",
+        category="attack",
+        cost=50,
+        effect=effect_fire_ball
+    )
+
+    creature_1 = BaseCreature(
+        name = "Dinosaurio",
+        health = 50,
+        velocity = 10,
+        energy = 1000
+    )
+
+    creature_2 = BaseCreature(
+        name = "Alien",
+        health = 800,
+        velocity = 15,
+        energy = 1000
+    )
+
+    creature_1.add_ability(fire_ball)
+
+    ability_context = ContextAbility(
+        alive_creatures = [creature_1,creature_2]
+    )
+
+    base_energy = creature_1.energy
+
+    result = creature_1.act(
+        ability_context = ability_context
+    )
+
+    assert f"{creature_1.name} can't act" != result, f"Creature should be able to act, got {result}"
+    assert creature_1.energy != base_energy, f"When act the energy should decrease, energy before : {base_energy} and energy after : {creature_1.energy}"

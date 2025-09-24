@@ -56,7 +56,15 @@ def test_ecosystem_simulate_simple_battle_turn():
         ecosystem = BaseEcosystem(**json_ecosystem)
         
         for turn in range(2):
-            ecosystem.logger.log(f"-------Turn {turn + 1}------------")
-            ecosystem.simulate_simple_battle_turn()
+            ecosystem.simulate_simple_battle_turn(
+                 ability_context = ContextAbility(
+                      alive_creatures = [
+                           creature_1,
+                           creature_2,
+                           creature_3
+                      ]
+                 ),
+                 turn = turn
+            )
 
         assert message in ecosystem.logger.get_log(), f"Message should be in the logger"

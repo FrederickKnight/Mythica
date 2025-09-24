@@ -17,8 +17,10 @@ def effect_extreme_speed(ctx:"ContextAbility") -> str:
 
 def effect_tsunami(ctx:"ContextAbility") -> str:
     damage = 30
-    for target in [c for c in ctx.alive_creatures if c != ctx.user]:
-        target.take_damage(damage)
+    for target in ctx.alive_creatures:
+        if target != ctx.user:
+            target.take_damage(damage)
+    
     return f"{ctx.user.name} used a huge tsunami to drown everyone making {damage} damage."
 
 def effect_tackle(ctx:"ContextAbility") -> str:

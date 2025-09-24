@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.0.0] - 22/09/2025
+## [1.0.0] - TO DECIDE
 
 ### Added
 

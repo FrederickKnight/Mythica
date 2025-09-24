@@ -11,7 +11,9 @@ class BaseEcosystem(BaseModel):
     seed:int = None
     logger:EcosystemIO = Field(default_factory=EcosystemIO)
     
-    _random:random.Random = PrivateAttr(default_factory=None)
+    _alive_creatures:list[BaseCreature] = []
+    _active_creatures:list[BaseCreature] = []
+    _random:random.Random = PrivateAttr(default_factory=None)   
 
     @field_validator("seed",mode="before")
     @classmethod
@@ -30,44 +32,66 @@ class BaseEcosystem(BaseModel):
     @model_validator(mode="after")
     def build_ecosystem(self) -> Self:
         self._random = random.Random(self.seed)
+
+        self._alive_creatures = [creature for creature in self.creatures if creature.is_alive()]
+        self._active_creatures = [creature for creature in self._alive_creatures if creature.energy > 0]
         return self
     
-    def simulate_simple_battle_turn(self) -> None:
+    def simulate_simple_battle_turn(self,ability_context:ContextAbility,turn:int = None) -> None:
         """
         Simulation where the creatures battle between them, using only it's abilities.
         """
-        alive_creatures = [c for c in self.creatures if c.is_alive()]
-        if not alive_creatures:
+        if not self._alive_creatures:
             return
         
-        for creature in alive_creatures:
-            if not creature.is_alive() or creature.energy <= 0:
+        if not self._active_creatures:
+            return
+
+        if turn:
+            self.logger.log(f"-------Turn {turn + 1}------------")
+
+        for creature in self._alive_creatures:
+            if not creature.is_alive():
+                self._alive_creatures.remove(creature)
+                self._active_creatures.remove(creature)
+                self.logger.log(f"{creature.name} has died")
                 continue
 
-            ability:BaseAbility = self._random.choice(creature.abilities) if creature.abilities else None
-
-            posible_targets = [c for c in alive_creatures if c != creature]
-            if not posible_targets:
+            if creature.energy <= 0:
+                self._active_creatures.remove(creature)
+                self.logger.log(f"{creature.name} can't act")
                 continue
-
-            target = self._random.choice(posible_targets)
-
-            ability_context = ContextAbility(
-                user = creature,
-                target = target,
-                targets = posible_targets,
-                all_creatures = alive_creatures
-            )
-
+            
             try:
-                if ability:
-                    ability_result = creature.use_ability(
-                        ability = ability,
-                        ctx = ability_context
-                    )
-                    self.logger.log(ability_result)
-                else:
-                    self.logger.log(f"{creature.name} has no ability to use")
+                act_result = creature.act(
+                    ability_context = ability_context,
+                    random = self._random
+                )
+                self.logger.log(act_result)
+
+                if creature.energy <= 0:
+                    self._active_creatures.remove(creature)
 
             except Exception as e:
-                print(f"Error in the execution of the ability {ability.name}: {e}")
+                self.logger.log(f"Error in the execution of the act {creature.name}: {e}")
+
+
+    def simulate_simple_battle(self,turns:int = 10) -> None:
+        """
+        Cycle in a range of turns given calling the method simulate_simple_battle_turn
+
+        Args:
+            turns (int, optional): turns to cycle for. Defaults to 10.
+        """
+        ability_context = ContextAbility(
+            alive_creatures = self._alive_creatures
+        )
+
+        for turn in range(turns):
+            if not self._alive_creatures or not self._active_creatures:
+                break
+            
+            self.simulate_simple_battle_turn(
+                ability_context = ability_context,
+                turn = turn
+            )

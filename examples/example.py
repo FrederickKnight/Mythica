@@ -1,65 +1,24 @@
-from mythica.core import BaseAbility, BaseCreature, BaseEcosystem
-from mythica.schema import AbilityCategoryEnum
+from mythica.core import BaseEcosystem
 from mythica.utils import EcosystemIO
 import time
 
 if __name__ == "__main__":
-    from mythica.catalog import EFFECTS
+    from mythica.catalog import ABILITIES
+    from mythica.catalog import CREATURES
 
     ### ABILITIES ##
-    fire_ball = BaseAbility(
-        name="fire ball",
-        category=AbilityCategoryEnum.ATTACK,
-        cost=20,
-        effect=EFFECTS["fire_ball"]
-    )
-
-    extreme_speed = BaseAbility(
-        name = "Extreme Speed",
-        category = AbilityCategoryEnum.ATTACK,
-        cost = 20,
-        effect = EFFECTS["extreme_speed"]
-    )
-
-    tsunami = BaseAbility(
-        name = "Tsunami",
-        category = AbilityCategoryEnum.ATTACK,
-        cost = 30,
-        effect = EFFECTS["tsunami"]
-    )
-
-    tackle = BaseAbility(
-        name = "Tackle",
-        category = AbilityCategoryEnum.ATTACK,
-        cost = 1,
-        effect = EFFECTS["tackle"]
-    )
+    fire_ball = ABILITIES["fire_ball"]
+    extreme_speed = ABILITIES["extreme_speed"]
+    tsunami = ABILITIES["tsunami"]
+    tackle = ABILITIES["tackle"]
 
     ### CREATURES ###
-    creature_1 = BaseCreature(
-        name = "Dinosaurio",
-        health = 60,
-        velocity = 10,
-        energy = 100
-    )
+    creature_1 = CREATURES["dinosaur"]
+    creature_2 = CREATURES["bird"]
+    creature_3 = CREATURES["alien"]
 
     creature_1.add_abilities([fire_ball,tackle])
-
-    creature_2 = BaseCreature(
-        name = "Pajaro",
-        health = 20,
-        velocity = 50,
-        energy = 100
-    )
     creature_2.add_abilities([extreme_speed,tackle])
-
-    creature_3 = BaseCreature(
-        name = "Alien",
-        health = 50,
-        velocity = 15,
-        energy = 100
-    )
-
     creature_3.add_abilities([tsunami,tackle])
 
 

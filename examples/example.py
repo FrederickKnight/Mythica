@@ -4,41 +4,35 @@ from mythica.utils import EcosystemIO
 import time
 
 if __name__ == "__main__":
-    from mythica.core.context import ContextAbility
-    from mythica.catalog import (
-        effect_extreme_speed,
-        effect_fire_ball,
-        effect_tackle,
-        effect_tsunami,
-    )
+    from mythica.catalog import EFFECTS
 
     ### ABILITIES ##
     fire_ball = BaseAbility(
         name="fire ball",
         category=AbilityCategoryEnum.ATTACK,
         cost=20,
-        effect=effect_fire_ball
+        effect=EFFECTS["fire_ball"]
     )
 
     extreme_speed = BaseAbility(
         name = "Extreme Speed",
         category = AbilityCategoryEnum.ATTACK,
         cost = 20,
-        effect = effect_extreme_speed
+        effect = EFFECTS["extreme_speed"]
     )
 
     tsunami = BaseAbility(
         name = "Tsunami",
         category = AbilityCategoryEnum.ATTACK,
         cost = 30,
-        effect = effect_tsunami
+        effect = EFFECTS["tsunami"]
     )
 
     tackle = BaseAbility(
         name = "Tackle",
         category = AbilityCategoryEnum.ATTACK,
         cost = 1,
-        effect = effect_tackle
+        effect = EFFECTS["tackle"]
     )
 
     ### CREATURES ###

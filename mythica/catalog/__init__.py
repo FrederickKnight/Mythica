@@ -1,6 +1,1 @@
-from .effects import (
-    effect_extreme_speed,
-    effect_fire_ball,
-    effect_tackle,
-    effect_tsunami,
-)
+from .effects import EFFECTS

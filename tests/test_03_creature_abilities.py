@@ -1,10 +1,7 @@
 import pytest
 from mythica.core import BaseCreature,BaseAbility
 from mythica.core.context import ContextAbility
-from mythica.catalog import (
-    effect_fire_ball,
-    effect_tackle
-)
+from mythica.catalog import EFFECTS
 
 def test_creature_add_ability():
     """
@@ -17,7 +14,7 @@ def test_creature_add_ability():
         name = "Fire Ball",
         category = "attack",
         cost = 10,
-        effect=effect_fire_ball
+        effect=EFFECTS["fire_ball"]
     )
 
     creature = BaseCreature(
@@ -45,14 +42,14 @@ def test_creature_add_abilities():
         name = "Fire Ball",
         category = "attack",
         cost = 10,
-        effect = effect_fire_ball
+        effect = EFFECTS["fire_ball"]
     )
 
     ability_2 = BaseAbility(
         name = "Water Mountain",
         category = "defense",
         cost = 20,
-        effect = effect_fire_ball
+        effect = EFFECTS["fire_ball"]
     )
 
     creature = BaseCreature(
@@ -76,14 +73,14 @@ def test_creature_non_duplicated_abilities():
         name="fire ball",
         category="attack",
         cost=50,
-        effect=effect_fire_ball
+        effect=EFFECTS["fire_ball"]
     )
 
     tackle = BaseAbility(
         name = "Tackle",
         category = "attack",
         cost = 5,
-        effect = effect_tackle
+        effect = EFFECTS["tackle"]
     )
 
     creature_1 = BaseCreature(
@@ -104,14 +101,14 @@ def test_creature_use_ability():
         name="fire ball",
         category="attack",
         cost=50,
-        effect=effect_fire_ball
+        effect=EFFECTS["fire_ball"]
     )
 
     tackle = BaseAbility(
         name = "Tackle",
         category = "attack",
         cost = 5,
-        effect = effect_tackle
+        effect = EFFECTS["tackle"]
     )
 
     creature_1 = BaseCreature(
@@ -149,7 +146,7 @@ def test_creature_act():
         name="fire ball",
         category="attack",
         cost=50,
-        effect=effect_fire_ball
+        effect=EFFECTS["fire_ball"]
     )
 
     creature_1 = BaseCreature(

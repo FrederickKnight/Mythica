@@ -15,7 +15,9 @@ classifiers = [
 ]
 urls = { "Homepage" = "https://github.com/FrederickKnight/Mythica" }
 dependencies = [
+    "asteval>=1.0.6",
     "pydantic>=2.11.9",
+    "pyyaml>=6.0.2",
 ]
 
 [dependency-groups]

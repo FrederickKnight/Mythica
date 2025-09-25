@@ -9,6 +9,8 @@ ABILITIES: dict[str,BaseAbility] = {}
 AbilityCategories = Union[AbilityCategoryEnum,Literal["attack","defense"]]
 
 def register_ability(name:str,category:AbilityCategories,cost:int,effect:dict[str, (ContextAbility)]):
+    if name in ABILITIES:
+        raise ValueError(f"Ability {name} already exist.")
     ability = BaseAbility(
         name = name,
         category = category,

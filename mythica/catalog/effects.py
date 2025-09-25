@@ -5,6 +5,8 @@ EFFECTS: dict[str,Callable[[ContextAbility],str]] = {}
 
 def register_effect(name:str):
     def wrapper(func:Callable[[ContextAbility],str]):
+        if name in EFFECTS:
+            raise ValueError(f"Effect {name} already exist.")
         EFFECTS[name] = func
         return func
     return wrapper

@@ -1,9 +1,10 @@
 from mythica.core import BaseCreature, BaseAbility
-from mythica.catalog import EFFECTS
 
 CREATURES: dict[str,BaseCreature] = {}
 
 def register_creature(name:str,health:float,velocity:float,energy:float):
+    if name in CREATURES:
+        raise ValueError(f"Creature {name} already exist.")
     creature = BaseCreature(
         name = name,
         health = health,

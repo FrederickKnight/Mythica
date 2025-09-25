@@ -65,7 +65,12 @@ def all_except_user(ctx:ContextAbility,damage:float = 0):
         if target != ctx.user:
             target.take_damage(damage)
 
+def all(ctx:ContextAbility,damage:float = 0):
+    for target in ctx.alive_creatures:
+        target.take_damage(damage)
+
 objetives = {
     "single_target":single_target,
-    "all_except_user":all_except_user
+    "all_except_user":all_except_user,
+    "all":all
 }

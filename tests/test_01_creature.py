@@ -1,11 +1,20 @@
 import pytest
 from mythica.core import BaseCreature
+import numpy as np
+
+base_creature_health = 50
+base_creature_energy = 100
+base_creature_velocity = 10
 
 json_creature = {
     "name" : "Dinosaurio",
-    "health" : 50,
-    "velocity" : 10,
-    "energy" : 100
+    "genes": np.array([
+        [
+            base_creature_health,
+            base_creature_energy,
+            base_creature_velocity
+        ]
+    ],dtype=float)
 }
 
 def test_creature_create():
@@ -19,9 +28,9 @@ def test_creature_create():
     creature = BaseCreature(**json_creature)
 
     assert creature.name == json_creature["name"], f"Name should be {json_creature['name']} not {creature.name}"
-    assert creature.health == json_creature["health"], f"Health should be {json_creature['health']} not {creature.health}"
-    assert creature.velocity == json_creature["velocity"], f"Velocity should be {json_creature['velocity']} not {creature.velocity}" 
-    assert creature.energy == json_creature["energy"], f"Energy should be {json_creature['energy']} not {creature.energy}"
+    assert creature.health == base_creature_health, f"Health should be {base_creature_health} not {creature.health}"
+    assert creature.velocity == base_creature_velocity, f"Velocity should be {base_creature_velocity} not {creature.velocity}" 
+    assert creature.energy == base_creature_energy, f"Energy should be {base_creature_energy} not {creature.energy}"
 
 def test_creature_take_damage():
     """
@@ -34,7 +43,7 @@ def test_creature_take_damage():
     creature = BaseCreature(**json_creature)
 
     damage_taken = 40
-    calculated_damage = max(0,json_creature["health"] - damage_taken)
+    calculated_damage = max(0,base_creature_health - damage_taken)
 
     creature.take_damage(
         quantity = damage_taken
@@ -52,7 +61,7 @@ def test_creature_use_energy():
     creature = BaseCreature(**json_creature)
 
     energy_used = 30
-    calculated_energy = max(0,json_creature["energy"] - energy_used)
+    calculated_energy = max(0,base_creature_energy - energy_used)
 
     creature.use_energy(
         quantity = energy_used

@@ -1,18 +1,28 @@
 import random
-from pydantic import BaseModel,Field, PrivateAttr, field_validator
+from pydantic import BaseModel,Field, PrivateAttr, field_validator, model_validator
 from .ability import BaseAbility
+import numpy as np
+import hashlib
+
 from typing import Self,TYPE_CHECKING
 if TYPE_CHECKING:
     from mythica.core.context import ContextAbility
 
+from mythica.schema import GeneEnum,GeneTypeEnum
+len_genes = len(GeneEnum)
+len_genes_type = len(GeneTypeEnum)
+shape_genes = (len_genes,len_genes_type)
+
 class BaseCreature(BaseModel):
     name:str
-    health:float
-    velocity:float
-    energy:float
+    genes:np.ndarray = Field(default=np.ndarray)
     abilities:list[BaseAbility] = Field(default_factory=list[BaseAbility])
 
-    _random:random.Random = PrivateAttr(default_factory=random.Random)   
+    _gene_key:int = PrivateAttr(default=None)
+
+    model_config = {
+        "arbitrary_types_allowed": True
+    }
 
     @field_validator("abilities",mode="before")
     @classmethod
@@ -23,6 +33,70 @@ class BaseCreature(BaseModel):
 
         unique_abilities = {a.name: a for a in abilities}.values()
         return sorted(unique_abilities, key=lambda a: a.name)
+    
+    @field_validator("genes",mode="before")
+    @classmethod
+    def validate_genes(cls,genes):
+        if genes is None or not isinstance(genes,np.ndarray):
+            genes = np.ceil(np.array([
+                [np.random.uniform(50,200),  # MAX_HEALTH
+                np.random.uniform(100,500),  # MAX_ENERGY
+                np.random.uniform(5,20)],    # VELOCITY
+                [0.0, 0.0, 0.0]              # CURRENT VALUES
+            ], dtype=float))
+
+        if genes.shape == (1,len_genes_type):
+            genes = np.vstack([genes, genes.copy()])
+
+        elif genes.shape != shape_genes:
+            raise ValueError(f"Genes must should have a shape of {shape_genes}, not {genes.shape}")
+        
+        genes[GeneEnum.CURRENT_VALUES] = genes[GeneEnum.MAX_VALUES].copy()
+
+        return genes
+    
+    @property
+    def gene_key(self):
+        if self._gene_key is None:
+            data = f"{self.name}:{np.array([*self.genes[GeneEnum.MAX_VALUES]]).tobytes()}".encode()
+            self._gene_key = int(hashlib.sha256(data).hexdigest(),16)
+        return self._gene_key
+
+    @property
+    def max_health(self):
+        return self.genes[GeneEnum.MAX_VALUES][GeneTypeEnum.HEALTH]
+    
+    @property
+    def health(self):
+        return self.genes[GeneEnum.CURRENT_VALUES][GeneTypeEnum.HEALTH]
+    
+    @health.setter
+    def health(self, value: float) -> None:
+        self.genes[GeneEnum.CURRENT_VALUES][GeneTypeEnum.HEALTH] = value
+    
+    @property
+    def max_energy(self):
+        return self.genes[GeneEnum.MAX_VALUES][GeneTypeEnum.ENERGY]
+    
+    @property
+    def energy(self):
+        return self.genes[GeneEnum.CURRENT_VALUES][GeneTypeEnum.ENERGY]
+    
+    @energy.setter
+    def energy(self, value:float):
+        self.genes[GeneEnum.CURRENT_VALUES][GeneTypeEnum.ENERGY] = value
+    
+    @property
+    def max_velocity(self):
+        return self.genes[GeneEnum.MAX_VALUES][GeneTypeEnum.VELOCITY]
+    
+    @property
+    def velocity(self):
+        return self.genes[GeneEnum.CURRENT_VALUES][GeneTypeEnum.VELOCITY]
+    
+    @velocity.setter
+    def velocity(self, value:float):
+        self.genes[GeneEnum.CURRENT_VALUES][GeneTypeEnum.VELOCITY] = value
 
     def is_alive(self) -> bool:
         """
@@ -96,7 +170,7 @@ class BaseCreature(BaseModel):
         else:
             return f"{self.name} can't use {ability.name}"
         
-    def act(self,ability_context:"ContextAbility",random:random.Random = None) -> str:
+    def act(self,ability_context:"ContextAbility",random:random.Random) -> str:
         """
         Creature will act using all in its capabilities.
 
@@ -107,9 +181,9 @@ class BaseCreature(BaseModel):
         Returns:
             str: text of the result of the act.
         """
-        _random = random or self._random
+        
         ability:BaseAbility = self._choice_ability_(
-            random = _random
+            random = random
         )
         if not ability:
           return f"{self.name} can't act"
@@ -121,25 +195,23 @@ class BaseCreature(BaseModel):
         posible_targets = ability_context.alive_creatures
         ability_context.target = self._choice_target_(
             targets = posible_targets,
-            random = _random
+            random = random
         ) if len(posible_targets) >= 2 else None
 
         return ability.effect(ability_context)
     
     ## HELPERS ##
-    def _choice_target_(self,targets:list[Self],random:random.Random = None):
-        _random = random or self._random
+    def _choice_target_(self,targets:list[Self],random:random.Random):
         while True:
-           target =  _random.choice(targets)
+           target =  random.choice(targets)
            if target != self:
                break
         
         return target
     
-    def _choice_ability_(self,random:random.Random = None):
-        _random = random or self._random
+    def _choice_ability_(self,random:random.Random):
         while True:
-            ability = _random.choice(self.abilities)
+            ability = random.choice(self.abilities)
             if ability.cost <= self.energy:
                 break
         return ability
@@ -150,3 +222,12 @@ class BaseCreature(BaseModel):
     
     def __repr__(self):
         return f"<{self.name.upper()}(Health:{self.health},Velocity:{self.velocity},Energy:{self.energy})>"
+    
+    def __eq__(self, other:Self):
+        if not isinstance(other,BaseCreature):
+            return False
+
+        return self.gene_key == other.gene_key
+    
+    def __hash__(self):
+        return hash(self.gene_key)

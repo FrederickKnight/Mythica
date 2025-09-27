@@ -1,27 +1,56 @@
 import pytest
 from mythica.core.context import ContextAbility
 from mythica.core import BaseCreature, BaseEcosystem, BaseAbility
+import numpy as np
 
-creature_1 = BaseCreature(
-    name = "Dinosaurio",
-    health = 500,
-    velocity = 10,
-    energy = 100
-)
+base_creature_1_health = 50
+base_creature_1_energy = 100
+base_creature_1_velocity = 10
 
-creature_2 = BaseCreature(
-    name = "Pajaro",
-    health = 200,
-    velocity = 50,
-    energy = 100
-)
+json_creature_1 = {
+    "name" : "Dinosaurio",
+    "genes": np.array([
+        [
+            base_creature_1_health,
+            base_creature_1_energy,
+            base_creature_1_velocity
+        ]
+    ],dtype=float)
+}
 
-creature_3 = BaseCreature(
-    name = "Alien",
-    health = 800,
-    velocity = 15,
-    energy = 100
-)
+base_creature_2_health = 200
+base_creature_2_energy = 100
+base_creature_2_velocity = 50
+
+json_creature_2 = {
+    "name" : "Alien",
+    "genes": np.array([
+        [
+            base_creature_2_health,
+            base_creature_2_energy,
+            base_creature_2_velocity
+        ]
+    ],dtype=float)
+}
+
+base_creature_3_health = 800
+base_creature_3_energy = 100
+base_creature_3_velocity = 15
+
+json_creature_3 = {
+    "name" : "Alien",
+    "genes": np.array([
+        [
+            base_creature_3_health,
+            base_creature_3_energy,
+            base_creature_3_velocity
+        ]
+    ],dtype=float)
+}
+
+creature_1 = BaseCreature(**json_creature_1)
+creature_2 = BaseCreature(**json_creature_2)
+creature_3 = BaseCreature(**json_creature_3)
 
 message = "test message"
 
@@ -56,15 +85,6 @@ def test_ecosystem_simulate_simple_battle_turn():
         ecosystem = BaseEcosystem(**json_ecosystem)
         
         for turn in range(2):
-            ecosystem.simulate_simple_battle_turn(
-                 ability_context = ContextAbility(
-                      alive_creatures = [
-                           creature_1,
-                           creature_2,
-                           creature_3
-                      ]
-                 ),
-                 turn = turn
-            )
+            ecosystem.simulate_simple_battle_turn(turn)
 
         assert message in ecosystem.logger.get_log(), f"Message should be in the logger"

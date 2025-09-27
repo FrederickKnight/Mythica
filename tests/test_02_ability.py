@@ -2,6 +2,7 @@ import pytest
 from mythica.core import BaseAbility, BaseCreature
 from mythica.core.context import ContextAbility
 from mythica.schema import AbilityCategoryEnum
+import numpy as np
 
 damage_fire_ball = 20
 
@@ -16,11 +17,19 @@ json_ability = {
     "effect": effect_fire_ball
 }
 
+base_creature_health = 50
+base_creature_energy = 100
+base_creature_velocity = 10
+
 json_creature = {
     "name" : "Dinosaurio",
-    "health" : 50,
-    "velocity" : 10,
-    "energy" : 100
+    "genes": np.array([
+        [
+            base_creature_health,
+            base_creature_energy,
+            base_creature_velocity
+        ]
+    ],dtype=float)
 }
 
 def test_ability_create():
@@ -39,7 +48,7 @@ def test_ability_create():
 
     creature = BaseCreature(**json_creature)
 
-    calculated_health = max(0,json_creature["health"] - damage_fire_ball)
+    calculated_health = max(0,base_creature_health - damage_fire_ball)
 
     context = ContextAbility(
         user = creature

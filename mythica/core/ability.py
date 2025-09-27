@@ -1,10 +1,7 @@
 from pydantic import BaseModel,field_serializer
 
 from mythica.schema import AbilityCategoryEnum
-from typing import Literal, Union, Self, Callable, TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from mythica.core.context import ContextAbility
+from typing import Literal, Union, Self, Callable
 
 AbilityCategories = Union[AbilityCategoryEnum,Literal["attack","defense"]]
 
@@ -12,7 +9,7 @@ class BaseAbility(BaseModel):
     name:str
     cost:int
     category:AbilityCategories
-    effect:Callable[["ContextAbility"],str]
+    effect:Callable[[any],str]
 
     @field_serializer("category")
     def serialize_category(self,category:AbilityCategories) -> str:

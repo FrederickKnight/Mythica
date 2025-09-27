@@ -1,3 +1,5 @@
 from .enums import (
-    AbilityCategoryEnum
+    AbilityCategoryEnum,
+    GeneEnum,
+    GeneTypeEnum
 )

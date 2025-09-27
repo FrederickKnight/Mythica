@@ -1,10 +1,39 @@
 import pytest
 from mythica.core import BaseCreature,BaseAbility
 from mythica.core.context import ContextAbility
-from mythica.catalog import (
-    effect_fire_ball,
-    effect_tackle
-)
+from mythica.catalog import EFFECTS, ABILITIES
+import numpy as np
+import random
+
+base_creature_1_health = 50
+base_creature_1_energy = 100
+base_creature_1_velocity = 10
+
+json_creature_1 = {
+    "name" : "Dinosaurio",
+    "genes": np.array([
+        [
+            base_creature_1_health,
+            base_creature_1_energy,
+            base_creature_1_velocity
+        ]
+    ],dtype=float)
+}
+
+base_creature_2_health = 800
+base_creature_2_energy = 1000
+base_creature_2_velocity = 15
+
+json_creature_2 = {
+    "name" : "Alien",
+    "genes": np.array([
+        [
+            base_creature_2_health,
+            base_creature_2_energy,
+            base_creature_2_velocity
+        ]
+    ],dtype=float)
+}
 
 def test_creature_add_ability():
     """
@@ -17,15 +46,10 @@ def test_creature_add_ability():
         name = "Fire Ball",
         category = "attack",
         cost = 10,
-        effect=effect_fire_ball
+        effect=EFFECTS["fire_ball"]
     )
 
-    creature = BaseCreature(
-        name = "Dinosaurio",
-        health = 50,
-        velocity = 10,
-        energy = 100
-    )
+    creature = BaseCreature(**json_creature_1)
 
     creature.add_ability(
         ability = ability_1
@@ -45,22 +69,17 @@ def test_creature_add_abilities():
         name = "Fire Ball",
         category = "attack",
         cost = 10,
-        effect = effect_fire_ball
+        effect = EFFECTS["fire_ball"]
     )
 
     ability_2 = BaseAbility(
         name = "Water Mountain",
         category = "defense",
         cost = 20,
-        effect = effect_fire_ball
+        effect = EFFECTS["fire_ball"]
     )
 
-    creature = BaseCreature(
-        name = "Dinosaurio",
-        health = 50,
-        velocity = 10,
-        energy = 100
-    )
+    creature = BaseCreature(**json_creature_1)
 
     list_abilities = [ability_1,ability_2]
 
@@ -76,22 +95,17 @@ def test_creature_non_duplicated_abilities():
         name="fire ball",
         category="attack",
         cost=50,
-        effect=effect_fire_ball
+        effect=EFFECTS["fire_ball"]
     )
 
     tackle = BaseAbility(
         name = "Tackle",
         category = "attack",
         cost = 5,
-        effect = effect_tackle
+        effect = EFFECTS["tackle"]
     )
 
-    creature_1 = BaseCreature(
-        name = "Dinosaurio",
-        health = 50,
-        velocity = 10,
-        energy = 100
-    )
+    creature_1 = BaseCreature(**json_creature_1)
 
     list_abilities = [fire_ball,tackle,tackle]
 
@@ -104,29 +118,19 @@ def test_creature_use_ability():
         name="fire ball",
         category="attack",
         cost=50,
-        effect=effect_fire_ball
+        effect=EFFECTS["fire_ball"]
     )
 
     tackle = BaseAbility(
         name = "Tackle",
         category = "attack",
         cost = 5,
-        effect = effect_tackle
+        effect = EFFECTS["tackle"]
     )
 
-    creature_1 = BaseCreature(
-        name = "Dinosaurio",
-        health = 50,
-        velocity = 10,
-        energy = 1000
-    )
+    creature_1 = BaseCreature(**json_creature_1)
 
-    creature_2 = BaseCreature(
-        name = "Alien",
-        health = 800,
-        velocity = 15,
-        energy = 1000
-    )
+    creature_2 = BaseCreature(**json_creature_2)
 
     creature_1.add_ability(fire_ball)
 
@@ -145,26 +149,11 @@ def test_creature_use_ability():
     assert creature_1.energy == new_energy, f"Ability that isn't the creature, should not be used, energy decreased"
 
 def test_creature_act():
-    fire_ball = BaseAbility(
-        name="fire ball",
-        category="attack",
-        cost=50,
-        effect=effect_fire_ball
-    )
+    fire_ball = ABILITIES["fire_ball"]
 
-    creature_1 = BaseCreature(
-        name = "Dinosaurio",
-        health = 50,
-        velocity = 10,
-        energy = 1000
-    )
+    creature_1 = BaseCreature(**json_creature_1)
 
-    creature_2 = BaseCreature(
-        name = "Alien",
-        health = 800,
-        velocity = 15,
-        energy = 1000
-    )
+    creature_2 = BaseCreature(**json_creature_2)
 
     creature_1.add_ability(fire_ball)
 
@@ -175,7 +164,8 @@ def test_creature_act():
     base_energy = creature_1.energy
 
     result = creature_1.act(
-        ability_context = ability_context
+        ability_context = ability_context,
+        random = random.Random()
     )
 
     assert f"{creature_1.name} can't act" != result, f"Creature should be able to act, got {result}"

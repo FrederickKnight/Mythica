@@ -1,0 +1,35 @@
+fire_ball:
+  name: "Fire Ball"
+  category: "attack"
+  cost: 20
+  effect:
+    damage: "20"
+    objective: "single_target"
+    message: "{user.name} used a ball of fire to burn {target.name} making {damage} damage."
+  
+extreme_speed:
+  name: "Extreme Speed"
+  category: "attack"
+  cost: 20
+  effect:
+    damage: "user.velocity * 2"
+    objective: "single_target"
+    message: "{user.name} used extreme velocity to tackle {target.name} making {damage} damage."
+
+tsunami:
+  name: "Tsunami"
+  category: "attack"
+  cost: 30
+  effect:
+    damage: "30"
+    objective: "all_except_user"
+    message: "{user.name} used a huge tsunami to drown everyone making {damage} damage."
+
+tackle:
+  name: "Tackle"
+  category: "attack"
+  cost: 1
+  effect:
+    damage: "5"
+    objective: "single_target"
+    message: "{user.name} tackle {target.name} making {damage} damage."

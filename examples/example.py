@@ -16,11 +16,16 @@ if __name__ == "__main__":
     creature_1 = CREATURES["dinosaur"]
     creature_2 = CREATURES["bird"]
     creature_3 = CREATURES["alien"]
+    creature_4 = CREATURES["robot"]
+    creature_5 = CREATURES["human"]
+    creature_6 = CREATURES["dog"]
 
     creature_1.add_abilities([fire_ball,tackle])
     creature_2.add_abilities([extreme_speed,tackle])
     creature_3.add_abilities([tsunami,tackle])
-
+    creature_4.add_abilities([fire_ball,tackle])
+    creature_5.add_abilities([tsunami,tackle])
+    creature_6.add_abilities([extreme_speed,tackle])
 
     ## ECOSYSTEM ##
     logger = EcosystemIO()
@@ -32,9 +37,9 @@ if __name__ == "__main__":
             creature_1,
             creature_2,
             creature_3,
-            creature_1,
-            creature_2,
-            creature_3
+            creature_4,
+            creature_5,
+            creature_6
         ],
         logger = logger
     )

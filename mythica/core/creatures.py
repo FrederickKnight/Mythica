@@ -3,6 +3,7 @@ from pydantic import BaseModel,Field, PrivateAttr, field_validator, model_valida
 from .ability import BaseAbility
 import numpy as np
 import hashlib
+import math
 
 from typing import Self,TYPE_CHECKING
 if TYPE_CHECKING:
@@ -17,6 +18,10 @@ class BaseCreature(BaseModel):
     name:str
     genes:np.ndarray = Field(default=np.ndarray)
     abilities:list[BaseAbility] = Field(default_factory=list[BaseAbility])
+
+    parents:tuple[Self,Self] = Field(default=None)
+    children:list[Self] = Field(default_factory=list)
+    generation:int = 0
 
     _gene_key:int = PrivateAttr(default=None)
 
@@ -198,8 +203,69 @@ class BaseCreature(BaseModel):
             random = random
         ) if len(posible_targets) >= 2 else None
 
-        return ability.effect(ability_context)
+        return ability.use(ability_context)
     
+    def mutate(self,random:random.Random,mutation_rate:float = 0.08) -> None:
+        max_genes:np.ndarray = self.genes[GeneEnum.MAX_VALUES]
+
+        for i in range(len_genes_type):
+            change = math.ceil(random.uniform(-mutation_rate,mutation_rate) * max_genes[i])
+            max_genes[i] = max(1,max_genes[i] + change)
+
+        self.genes[GeneEnum.CURRENT_VALUES] = max_genes.copy()
+        self._gene_key = None
+    
+    def cross_genes(self,random:random.Random,other:Self,name:str = None):
+        if not other:
+            return
+
+        if self.energy < 10 or other.energy < 10:
+            return
+
+        child_genes = np.zeros_like(self.genes)
+        for i in range(len_genes_type):
+            child_genes[GeneEnum.MAX_VALUES][i] = random.choice([
+                self.genes[GeneEnum.MAX_VALUES][i],
+                other.genes[GeneEnum.MAX_VALUES][i]
+            ])
+
+        child_genes[GeneEnum.CURRENT_VALUES] = child_genes[GeneEnum.MAX_VALUES].copy()
+
+        child = BaseCreature(
+            name = name or f"{self.name[:3]}{other.name[:3]}",
+            genes = child_genes,
+            abilities = list(set(self.abilities + other.abilities))
+        )
+        
+        child.mutate(
+            random = random,
+            mutation_rate = 0.08
+        )
+
+        child.parents = (self,other)
+        child.generation = max(self.generation,other.generation) + 1
+        self.children.append(child)
+        other.children.append(child)
+
+        self.use_energy(10)
+        other.use_energy(10)
+
+        return child
+
+    def choose_partner(self,random:random.Random,creatures:Self,probability_to_choose:float = 0.8) -> Self:
+        if len(creatures) <= 1:
+            return
+        
+        # Didn't choose a partner
+        if random.uniform(0,1) < probability_to_choose:
+            return
+
+        while True:
+            creature:Self = random.choice(creatures)
+            if creature != self:
+                break
+        return creature
+
     ## HELPERS ##
     def _choice_target_(self,targets:list[Self],random:random.Random):
         while True:
@@ -218,10 +284,10 @@ class BaseCreature(BaseModel):
 
     ## DUNDER ##
     def __str__(self):
-        return f"<{self.name.upper()}(Health:{self.health},Velocity:{self.velocity},Energy:{self.energy})>"
+        return f"<{self.name.upper()}(Health:{self.health},Velocity:{self.velocity},Energy:{self.energy},generation:{self.generation},parents:{self.parents},children:{self.children})>"
     
     def __repr__(self):
-        return f"<{self.name.upper()}(Health:{self.health},Velocity:{self.velocity},Energy:{self.energy})>"
+        return f"<{self.name.upper()}(Health:{self.health}/{self.max_health},Velocity:{self.velocity}/{self.max_velocity},Energy:{self.energy}/{self.max_energy})>"
     
     def __eq__(self, other:Self):
         if not isinstance(other,BaseCreature):

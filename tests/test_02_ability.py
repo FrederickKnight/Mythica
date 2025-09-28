@@ -1,7 +1,7 @@
 import pytest
 from mythica.core import BaseAbility, BaseCreature
 from mythica.core.context import ContextAbility
-from mythica.schema import AbilityCategoryEnum
+from mythica.schema import AbilityCategoryEnum, AbilityObjectiveEnum
 import numpy as np
 
 damage_fire_ball = 20
@@ -14,7 +14,8 @@ json_ability = {
     "name":"Fire Ball",
     "cost":10,
     "category":AbilityCategoryEnum.ATTACK,
-    "effect": effect_fire_ball
+    "effect": effect_fire_ball,
+    "objective" : AbilityObjectiveEnum.SINGLE_TARGET
 }
 
 base_creature_health = 50

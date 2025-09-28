@@ -45,7 +45,7 @@ class BaseEcosystem(BaseModel):
             return
         
         if turn != None:
-            self.logger.log(f"-------Turn {turn + 1}------------")
+            self.logger.log(f"------------Turn {turn + 1}------------")
 
         ability_context = ContextAbility(
             alive_creatures = self._alive_creatures
@@ -78,8 +78,11 @@ class BaseEcosystem(BaseModel):
             except Exception as e:
                 self.logger.log(f"Error in the execution of the act {creature.name}: {e}")
         
-        for creature_dead in _creatures_to_remove_alive:
-            self.logger.log(f"{creature_dead.name} has died")
+        for creature in self._alive_creatures:
+            if not creature.is_alive():
+                _creatures_to_remove_alive.add(creature)
+                _creatures_to_remove_active.add(creature)
+                self.logger.log(f"{creature.name} has died")
 
         self._alive_creatures -= _creatures_to_remove_alive
         self._active_creatures -= _creatures_to_remove_active
@@ -98,3 +101,91 @@ class BaseEcosystem(BaseModel):
                 break
             
             self.simulate_simple_battle_turn(turn)
+
+    def simulate_turn_of_season(self,turn:int = None):
+        if not self._alive_creatures or not self._active_creatures:
+            return
+        
+        if turn != None:
+            self.logger.log(f"------------Turn {turn + 1}------------")
+
+        ability_context = ContextAbility(
+            alive_creatures = self._alive_creatures
+        )
+
+        _creatures_to_remove_alive:set[BaseCreature]  = set()
+        _creatures_to_remove_active:set[BaseCreature]  = set()
+
+        for creature in self._active_creatures:
+            if not creature.is_alive():
+                _creatures_to_remove_alive.add(creature)
+                _creatures_to_remove_active.add(creature)
+                continue
+
+            if creature.energy <= 0:
+                _creatures_to_remove_active.add(creature)
+                self.logger.log(f"{creature.name} can't act")
+                continue
+            
+            try:
+                act_result = creature.act(
+                    ability_context = ability_context,
+                    random = self._random
+                )
+                self.logger.log(act_result)
+
+                if creature.energy <= 0:
+                    _creatures_to_remove_active.add(creature)
+
+            except Exception as e:
+                self.logger.log(f"Error in the execution of the act {creature.name}: {e}")
+        
+        for creature in self._alive_creatures:
+            if not creature.is_alive():
+                _creatures_to_remove_alive.add(creature)
+                _creatures_to_remove_active.add(creature)
+                self.logger.log(f"{creature.name} has died")
+
+
+        self._alive_creatures -= _creatures_to_remove_alive
+        self._active_creatures -= _creatures_to_remove_active
+
+    def simulate_season(self,seasons:int = 5, turns_for_season:int = 5) -> None:
+        for season in range(seasons):
+            if len(self._alive_creatures) <= 1 or not self._active_creatures:
+                self.logger.log("Simulation ended: no alive or active creatures left.")
+                break
+            
+            self.logger.log(f"------------Season {season + 1}------------")
+
+            for turn in range(turns_for_season):
+                self.simulate_turn_of_season(
+                    turn = turn
+                )
+            
+            # Cross creatures
+            _creatures_to_cross:set[BaseCreature] = self._active_creatures.copy()
+
+            self.logger.log("------------Mating Season--------------")
+            self.logger.log(f"Creatures : {_creatures_to_cross}")
+
+            if len(_creatures_to_cross) > 1:
+                for creature in _creatures_to_cross:
+                    partner = creature.choose_partner(
+                        random = self._random,
+                        creatures = list(_creatures_to_cross)
+                    )
+                    
+                    child = creature.cross_genes(
+                        random = self._random,
+                        other = partner
+                    )
+                    if child:
+                        self.logger.log(f"{creature.name} mate with {partner.name}")
+                        self.logger.log(f"New Child: {child}")
+                        self._alive_creatures.add(child)
+                        self._active_creatures.add(child)
+                    else:
+                        self.logger.log(f"{creature.name} couldn't mate")
+
+            self.logger.log("---------------------------------------")

@@ -4,13 +4,13 @@ services:
     build:
       context: .
       dockerfile: dockerfile
-    container_name: ecosystem-prod
+    container_name: mythica-prod
 
   dev:
     build:
       context: .
       dockerfile: dockerfile.dev
-    container_name: ecosystem-dev
+    container_name: mythica-dev
     volumes:
       - .:/workspace
     tty: true

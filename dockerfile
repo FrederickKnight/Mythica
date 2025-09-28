@@ -10,4 +10,4 @@ RUN apt-get update && \
 COPY pyproject.toml uv.lock* ./
 RUN uv sync --frozen --no-dev
 
-COPY ecosystem/ ./ecosystem
+COPY mythica/ ./mythica

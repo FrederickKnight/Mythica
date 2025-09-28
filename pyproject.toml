@@ -1,14 +1,32 @@
 [project]
-name = "ecosystem"
-version = "0.1.0"
-description = "lib for simulation of fantasy worlds"
+name = "mythica"
+version = "1.0.0"
+description = "Lib for Simulation of fantasy ecosystems"
+authors = [
+    { name = "John Frederick Knight Berra / FrederickKnight", email = "infisefir@gmail.com" },
+]
 readme = "README.md"
+license = { file = "LICENSE" }
 requires-python = ">=3.12"
+keywords = [
+    "python",
+    "simulation",
+    "fantasy",
+    "creatures",
+    "abilities",
+    "ecosystems",
+]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.12",
+]
+urls = { "Homepage" = "https://github.com/FrederickKnight/Mythica" }
 dependencies = [
+    "asteval>=1.0.6",
+    "numpy>=2.3.3",
     "pydantic>=2.11.9",
+    "pyyaml>=6.0.2",
 ]
 
 [dependency-groups]
-dev = [
-    "pytest>=8.4.2",
-]
+dev = ["pytest>=8.4.2"]

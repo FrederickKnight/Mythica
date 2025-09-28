@@ -61,7 +61,8 @@ test_ability = BaseAbility(
     name = "test",
     cost = 0,
     category = "attack",
-    effect = effect_test_message
+    effect = effect_test_message,
+    objective = "single_target"
 )
 
 creature_1.add_ability(test_ability)

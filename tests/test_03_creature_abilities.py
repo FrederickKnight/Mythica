@@ -46,7 +46,8 @@ def test_creature_add_ability():
         name = "Fire Ball",
         category = "attack",
         cost = 10,
-        effect=EFFECTS["fire_ball"]
+        effect=EFFECTS["fire_ball"],
+        objective = "single_target"
     )
 
     creature = BaseCreature(**json_creature_1)
@@ -69,14 +70,16 @@ def test_creature_add_abilities():
         name = "Fire Ball",
         category = "attack",
         cost = 10,
-        effect = EFFECTS["fire_ball"]
+        effect = EFFECTS["fire_ball"],
+        objective = "single_target"
     )
 
     ability_2 = BaseAbility(
         name = "Water Mountain",
         category = "defense",
         cost = 20,
-        effect = EFFECTS["fire_ball"]
+        effect = EFFECTS["fire_ball"],
+        objective = "single_target"
     )
 
     creature = BaseCreature(**json_creature_1)
@@ -95,14 +98,16 @@ def test_creature_non_duplicated_abilities():
         name="fire ball",
         category="attack",
         cost=50,
-        effect=EFFECTS["fire_ball"]
+        effect=EFFECTS["fire_ball"],
+        objective = "single_target"
     )
 
     tackle = BaseAbility(
         name = "Tackle",
         category = "attack",
         cost = 5,
-        effect = EFFECTS["tackle"]
+        effect = EFFECTS["tackle"],
+        objective = "single_target"
     )
 
     creature_1 = BaseCreature(**json_creature_1)
@@ -118,14 +123,16 @@ def test_creature_use_ability():
         name="fire ball",
         category="attack",
         cost=50,
-        effect=EFFECTS["fire_ball"]
+        effect=EFFECTS["fire_ball"],
+        objective = "single_target"
     )
 
     tackle = BaseAbility(
         name = "Tackle",
         category = "attack",
         cost = 5,
-        effect = EFFECTS["tackle"]
+        effect = EFFECTS["tackle"],
+        objective = "single_target"
     )
 
     creature_1 = BaseCreature(**json_creature_1)

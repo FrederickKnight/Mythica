@@ -4,6 +4,7 @@ from pathlib import Path
 
 from mythica.core import BaseAbility, BaseCreature
 from mythica.core.context import ContextAbility
+from mythica.schema import AbilityObjectiveEnum
 
 eval_interpreter = Interpreter()
 
@@ -21,7 +22,8 @@ def load_abilities_from_yaml(path:str) -> dict[str,BaseAbility]:
             name = ability["name"],
             cost = ability["cost"],
             category = ability["category"],
-            effect = make_effect(ability["effect"])
+            effect = make_effect(ability["effect"]),
+            objective = ability["effect"]["objective"]
         )
 
     return abilities
@@ -70,7 +72,7 @@ def all(ctx:ContextAbility,damage:float = 0):
         target.take_damage(damage)
 
 objetives = {
-    "single_target":single_target,
-    "all_except_user":all_except_user,
-    "all":all
+    AbilityObjectiveEnum.SINGLE_TARGET:single_target,
+    AbilityObjectiveEnum.ALL:all,
+    AbilityObjectiveEnum.ALL_EXCEPT_USER:all_except_user,
 }

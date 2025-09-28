@@ -19,35 +19,35 @@ def register_creature(name:str,genes:np.ndarray = None):
 register_creature(
     name = "dinosaur",
     genes = np.array([
-        [60,100,10],
+        [500,100,10],
     ],dtype=float)
 )
 
 register_creature(
     name = "bird",
     genes = np.array([
-        [20,100,50],
+        [120,100,50],
     ],dtype=float)
 )
 
 register_creature(
     name = "alien",
     genes = np.array([
-        [50,100,15],
+        [300,100,15],
     ],dtype=float)
 )
 
 register_creature(
     name = "robot",
     genes = np.array([
-        [80,200,8],
+        [380,200,8],
     ],dtype=float)
 )
 
 register_creature(
     name = "human",
     genes = np.array([
-        [100,120,20],
+        [250,120,20],
     ],dtype=float)
 )
 

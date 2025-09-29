@@ -16,7 +16,7 @@ shape_genes = (len_genes,len_genes_type)
 
 class BaseCreature(BaseModel):
     name:str
-    genes:np.ndarray = Field(default=np.ndarray)
+    genes:np.ndarray = Field(default=None,validate_default=True)
     abilities:list[BaseAbility] = Field(default_factory=list[BaseAbility])
 
     parents:tuple[Self,Self] = Field(default=None)

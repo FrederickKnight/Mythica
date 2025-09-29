@@ -1,5 +1,5 @@
 import random
-from pydantic import BaseModel,Field, PrivateAttr, field_validator, model_validator
+from pydantic import BaseModel,Field, PrivateAttr, field_validator
 from .ability import BaseAbility
 import numpy as np
 import hashlib
@@ -120,7 +120,11 @@ class BaseCreature(BaseModel):
             quantity (float): quantity to substract from the health.
         """
         if isinstance(quantity,int) or isinstance(quantity,float):
-            self.health = max(0,self.health - quantity)
+            self.health = max(0,self.health - abs(quantity))
+
+    def heal(self,quantity:float) -> None:
+        if isinstance(quantity,int) or isinstance(quantity,float):
+            self.health = min(self.max_health, self.health + abs(quantity))
 
     def use_energy(self,quantity:float) -> None:
         """
@@ -130,7 +134,11 @@ class BaseCreature(BaseModel):
             quantity (float): quantity to Substract from the energy.
         """
         if isinstance(quantity,int) or isinstance(quantity,float):
-            self.energy = max(0,self.energy - quantity)
+            self.energy = max(0,self.energy - abs(quantity))
+
+    def rest(self,quantity:float) -> None:
+        if isinstance(quantity,int) or isinstance(quantity,float):
+            self.energy = min(self.max_energy, self.energy + abs(quantity))
 
     def add_ability(self,ability:BaseAbility) -> None:
         """

@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.0.1]
+
+### Added
+
+- "BaseCreatures" : heal and rest methods.
+
+### Changed
+
+- "BaseCreature" : take_damage and use_energy now use absolute values to the quantity.
+
 ## [1.0.0] - 28-09-2025
 
 ### Added

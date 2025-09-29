@@ -32,7 +32,7 @@ def test_creature_create():
     assert creature.velocity == base_creature_velocity, f"Velocity should be {base_creature_velocity} not {creature.velocity}" 
     assert creature.energy == base_creature_energy, f"Energy should be {base_creature_energy} not {creature.energy}"
 
-def test_creature_take_damage():
+def test_creature_take_damage_and_heal():
     """
     Test the method 'take_damage' of the class 'BaseCreature'.
 
@@ -57,7 +57,13 @@ def test_creature_take_damage():
 
     assert creature.health == 0, f"Health should be 0 if taken more damage than health, not {creature.health}"
 
-def test_creature_use_energy():
+    creature.heal(
+        quantity = creature.max_health + 1
+    )
+
+    assert creature.health == creature.max_health, f"Health should be {creature.max_health}, not {creature.health}"
+
+def test_creature_use_energy_and_rest():
     creature = BaseCreature(**json_creature)
 
     energy_used = 30
@@ -74,3 +80,9 @@ def test_creature_use_energy():
     )
 
     assert creature.energy == 0, f"Energy should be 0 if used more energy, not {creature.energy}"
+
+    creature.rest(
+        quantity = creature.max_energy + 1
+    )
+    
+    assert creature.energy == creature.max_energy, f"Energy should be {creature.max_energy}, not {creature.energy}"

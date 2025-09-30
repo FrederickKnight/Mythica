@@ -275,9 +275,10 @@ class BaseCreature(BaseModel):
         return creature
 
     ## HELPERS ##
-    def _choice_target_(self,targets:list[Self],random:random.Random):
+    def _choice_target_(self,targets:set[Self],random:random.Random):
+        targets_list = list(targets)
         while True:
-           target =  random.choice(targets)
+           target =  random.choice(targets_list)
            if target != self:
                break
         

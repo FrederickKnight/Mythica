@@ -8,4 +8,4 @@ class ContextAbility(BaseModel):
     """
     user:BaseCreature = None
     target:BaseCreature = None
-    alive_creatures:list[BaseCreature] = None
+    alive_creatures:set[BaseCreature] = None
